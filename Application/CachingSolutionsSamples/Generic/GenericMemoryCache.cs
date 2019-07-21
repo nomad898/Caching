@@ -23,6 +23,15 @@ namespace CachingSolutionsSamples.Generic
             cache.Set(prefix + forUser, list, ObjectCache.InfiniteAbsoluteExpiration);
         }
 
+        public void Set(string forUser, IEnumerable<T> list, DateTimeOffset dateTimeOffset)
+        {
+            var cacheItemPolicy = new CacheItemPolicy()
+            {
+                AbsoluteExpiration = dateTimeOffset
+            };
+            cache.Set(prefix + forUser, list, cacheItemPolicy);
+        }
+
         public void Set(string forUser, IEnumerable<T> list, string sqlQuery)
         {
             cache.Set(prefix + forUser, list, CreatePolicy(sqlQuery));

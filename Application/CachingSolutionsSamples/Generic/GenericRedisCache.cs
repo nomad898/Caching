@@ -48,7 +48,7 @@ namespace CachingSolutionsSamples.Generic
             {
                 var stream = new MemoryStream();
                 serializer.WriteObject(stream, list);
-                db.StringSet(key, stream.ToArray(), );
+                db.StringSet(key, stream.ToArray());
             }
         }      
     }
