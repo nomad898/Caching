@@ -11,10 +11,11 @@ namespace FibNumbers
         static void Main(string[] args)
         {
             Fibonacci fibonacci = new Fibonacci("localhost");
-            Console.WriteLine(fibonacci.CalculateStandardCache(10));
-            Console.WriteLine(fibonacci.CalculateStandardCache(10));
             Console.WriteLine(fibonacci.Calculate(10));
-            //Console.WriteLine(fibonacci.CalculateRedis(5));
+            Console.WriteLine(fibonacci.CalculateStandardCache(10));
+            Console.WriteLine(fibonacci.CalculateStandardCache(10));
+            Console.WriteLine(fibonacci.CalculateRedis(10));
+            Console.WriteLine(fibonacci.CalculateRedis(10));
             Console.ReadKey();
         }
     }

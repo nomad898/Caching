@@ -16,9 +16,24 @@ namespace FibNumbers
 
         public Fibonacci(string connectionString)
         {
-            redis = ConnectionMultiplexer.Connect(connectionString);
+            var options = ConfigurationOptions.Parse(connectionString);
+            options.AllowAdmin = true;
+            redis = ConnectionMultiplexer.Connect(options);
             db = redis.GetDatabase();
+            var endpoints = redis.GetEndPoints();
+            var server = redis.GetServer(endpoints[0]);
+            server.FlushAllDatabases();
             memoryCache = MemoryCache.Default;
+        }
+
+        public int Calculate(int value)
+        {
+            if (value <= 1)
+            {
+                return 1;
+            }
+            var result = (Calculate(value - 1) + Calculate(value - 2));
+            return result;
         }
 
         public int CalculateRedis(int value)
@@ -27,15 +42,31 @@ namespace FibNumbers
             {
                 return 1;
             }
-            int result = GetValue(value.ToString());
-            result = (CalculateRedis(value - 1) + CalculateRedis(value - 2));
-            SetValue(value.ToString(), result);
-
+            int result = GetValue(value.ToString());         
             if (result != 0)
             {
                 return result;
             }
+            result = (CalculateRedis(value - 1) + CalculateRedis(value - 2));
+            SetValue(value.ToString(), result);
             return result;
+        }
+
+
+        private int GetValue(string key)
+        {
+            var redisValue = db.StringGet(key);
+            if (redisValue.HasValue)
+            {
+                int.TryParse(redisValue, out int result);
+                return result;
+            }
+            return default(int);
+        }
+
+        private void SetValue(string key, int value)
+        {
+            db.StringSet(key, value);
         }
 
         public int CalculateStandardCache(int value)
@@ -50,18 +81,7 @@ namespace FibNumbers
                 return result;
             }
             result = (CalculateStandardCache(value - 1) + CalculateStandardCache(value - 2));
-            SetValueFromStandardCache(value.ToString(), result.ToString());
-                     
-            return result;
-        }
-
-        public int Calculate(int value)
-        {
-            if (value <= 1)
-            {
-                return 1;
-            }
-            var  result = (Calculate(value - 1) + Calculate(value - 2));           
+            SetValueFromStandardCache(value.ToString(), result.ToString());                     
             return result;
         }
 
@@ -74,28 +94,7 @@ namespace FibNumbers
         private void SetValueFromStandardCache(string key, string value)
         {
             memoryCache.Set(key, value, DateTime.Now.AddMinutes(1));
-        }
+        }          
 
-        private int GetValue(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                db.SetAdd(key, default(int));
-                return default(int);
-            }
-            db.SetAdd(key, default(int));
-            var redisValue = db.StringGet(key);
-            if (redisValue.HasValue)
-            {
-                int.TryParse(redisValue, out int result);
-                return result;
-            }
-            return default(int);
-        }
-
-        private void SetValue(string key, int value)
-        {
-            db.StringSet(key, value);
-        }
     }
 }
