@@ -61,7 +61,7 @@ namespace FibNumbers
                 int.TryParse(redisValue, out int result);
                 return result;
             }
-            return default(int);
+            return 0;
         }
 
         private void SetValue(string key, int value)

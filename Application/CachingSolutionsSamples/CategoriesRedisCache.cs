@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace CachingSolutionsSamples
 {
-	class CategoriesRedisCache : ICategoriesCache
+	class CategoriesRedisCache : ICache<Category>
 	{
 		private ConnectionMultiplexer redisConnection;
 		string prefix = "Cache_Categories";

@@ -8,7 +8,7 @@ using System.Runtime.Caching;
 
 namespace CachingSolutionsSamples
 {
-	internal class CategoriesMemoryCache : ICategoriesCache
+	internal class CategoriesMemoryCache : ICache<Category>
 	{
 		ObjectCache cache = MemoryCache.Default;
 		string prefix  = "Cache_Categories";

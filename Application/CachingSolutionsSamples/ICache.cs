@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CachingSolutionsSamples
 {
-	public interface ICategoriesCache
+	public interface ICache<T>
 	{
-		IEnumerable<Category> Get(string forUser);
-		void Set(string forUser, IEnumerable<Category> categories);
+		IEnumerable<T> Get(string forUser);
+		void Set(string forUser, IEnumerable<T> list);
 	}
 }

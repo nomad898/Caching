@@ -10,9 +10,9 @@ namespace CachingSolutionsSamples
 {
 	public class CategoriesManager
 	{
-		private ICategoriesCache cache;
+		private ICache<Category> cache;
 
-		public CategoriesManager(ICategoriesCache cache)
+		public CategoriesManager(ICache<Category> cache)
 		{
 			this.cache = cache;
 		}
